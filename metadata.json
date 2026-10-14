@@ -1,0 +1,6 @@
+{
+  "name": "BitLife - Life Simulator",
+  "description": "Live your digital life however you choose in BitLife. Make choices, pursue careers, build relationships, commit crimes, amass wealth, and discover your legacy.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

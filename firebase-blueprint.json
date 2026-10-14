@@ -1,0 +1,211 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User profile holding authenticated player information.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "The unique Firebase Auth UID."
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "The email address of the user."
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Display name of the user."
+        },
+        "photoUrl": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "User avatar photo URL."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when user document was created."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when user document was last updated."
+        }
+      },
+      "required": ["id", "email", "createdAt", "updatedAt"]
+    },
+    "CharacterSave": {
+      "title": "Character Save",
+      "description": "Active or saved BitLife character simulation data.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Identifier of the save file."
+        },
+        "userId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Owner user UID."
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Full name of the character."
+        },
+        "age": {
+          "type": "number",
+          "description": "Age of the character."
+        },
+        "bankBalance": {
+          "type": "number",
+          "description": "Bank balance of the character."
+        },
+        "netWorth": {
+          "type": "number",
+          "description": "Net worth of the character."
+        },
+        "characterData": {
+          "type": "string",
+          "maxLength": 200000,
+          "description": "Serialized JSON string containing complete character state."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last saved timestamp."
+        }
+      },
+      "required": ["id", "userId", "name", "age", "bankBalance", "netWorth", "characterData", "createdAt", "updatedAt"]
+    },
+    "PastLifeRecord": {
+      "title": "Past Life Record",
+      "description": "Cemetery record for a deceased BitLife character.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Unique identifier of the record."
+        },
+        "userId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Owner user UID."
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 100,
+          "description": "Name of deceased character."
+        },
+        "age": {
+          "type": "number",
+          "description": "Final age achieved."
+        },
+        "netWorth": {
+          "type": "number",
+          "description": "Final net worth achieved."
+        },
+        "ribbon": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Ribbon earned in life."
+        },
+        "causeOfDeath": {
+          "type": "string",
+          "maxLength": 250,
+          "description": "Cause of death."
+        },
+        "epitaph": {
+          "type": "string",
+          "maxLength": 300,
+          "description": "Epitaph text on gravestone."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when life concluded."
+        }
+      },
+      "required": ["id", "userId", "name", "age", "netWorth", "ribbon", "causeOfDeath", "epitaph", "createdAt"]
+    },
+    "Account": {
+      "title": "Account Record",
+      "description": "User login credential record for cross-device authentication and SYStops password management.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "password": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 50 },
+        "lastLoginAt": { "type": "string", "format": "date-time" },
+        "lastDevice": { "type": "string", "maxLength": 256 },
+        "characterData": { "type": "string", "maxLength": 1000000 },
+        "characterName": { "type": "string", "maxLength": 100 },
+        "characterAge": { "type": "number" },
+        "characterUpdatedAt": { "type": "string", "format": "date-time" },
+        "pastLivesData": { "type": "string", "maxLength": 500000 },
+        "streakData": { "type": "string", "maxLength": 50000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "password", "createdAt", "updatedAt"]
+    },
+    "LoginAudit": {
+      "title": "Login Event Audit",
+      "description": "Audit record of login attempts across devices.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "action": { "type": "string", "maxLength": 50 },
+        "device": { "type": "string", "maxLength": 256 },
+        "ip": { "type": "string", "maxLength": 64 },
+        "success": { "type": "boolean" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "action", "success", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Primary user profile document keyed by auth UID."
+    },
+    "/users/{userId}/saves/{saveId}": {
+      "schema": "CharacterSave",
+      "description": "User save game snapshots."
+    },
+    "/users/{userId}/pastLives/{recordId}": {
+      "schema": "PastLifeRecord",
+      "description": "Past life cemetery records for the user."
+    },
+    "/accounts/{accountId}": {
+      "schema": "Account",
+      "description": "Cross-device user accounts, character save snapshots, and passwords managed via SYStops."
+    },
+    "/accounts/{accountId}/saves/{saveId}": {
+      "schema": "CharacterSave",
+      "description": "Cross-device synchronized character save records."
+    },
+    "/accounts/{accountId}/pastLives/{recordId}": {
+      "schema": "PastLifeRecord",
+      "description": "Cross-device synchronized past life records."
+    },
+    "/logins/{loginId}": {
+      "schema": "LoginAudit",
+      "description": "System-wide login audit log records across devices."
+    }
+  }
+}

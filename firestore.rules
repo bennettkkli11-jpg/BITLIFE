@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128;
+    }
+
+    // User Profile Documents & Cross-Device Cloud Saves
+    match /users/{userId} {
+      allow get, list, create, update: if true;
+      allow delete: if false;
+
+      match /saves/{saveId} {
+        allow get, list, create, update, delete: if true;
+      }
+
+      match /pastLives/{recordId} {
+        allow get, list, create, update, delete: if true;
+      }
+    }
+
+    // Cross-device Accounts for authentication, live saves, and SYStops password management
+    match /accounts/{accountId} {
+      allow get, list, create, update, delete: if true;
+
+      match /{allSubcollections=**} {
+        allow get, list, create, update, delete: if true;
+      }
+    }
+
+    // Cross-device Logins audit tracking
+    match /logins/{loginId} {
+      allow get, list, create, update, delete: if true;
+    }
+
+    // Fallback default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
